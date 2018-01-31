@@ -164,3 +164,16 @@ func ExampleTemplate_PrintAST() {
 	//   CONTENT[ '</p>' ]
 	//
 }
+
+func TestTemplateRemoveHelper(t *testing.T) {
+	tpl := MustParse("")
+	tpl.RegisterHelper("foo", func() string { return "" })
+	if _, ok := tpl.helpers["foo"]; !ok {
+		t.Error("Expected helper to be registered")
+	}
+
+	tpl.RemoveHelper("foo")
+	if _, ok := tpl.helpers["foo"]; ok {
+		t.Error("Expected helper to not be registered")
+	}
+}

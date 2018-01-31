@@ -56,6 +56,13 @@ func RegisterHelpers(helpers map[string]interface{}) {
 	}
 }
 
+// RemoveHelper removes a previously registered global helper.
+func RemoveHelper(name string) {
+	helpersMutex.Lock()
+	defer helpersMutex.Unlock()
+	delete(helpers, name)
+}
+
 // ensureValidHelper panics if given helper is not valid
 func ensureValidHelper(name string, funcValue reflect.Value) {
 	if funcValue.Kind() != reflect.Func {
