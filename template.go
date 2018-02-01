@@ -162,6 +162,12 @@ func (tpl *Template) RegisterPartials(partials map[string]string) {
 	}
 }
 
+func (tpl *Template) RemovePartial(name string) {
+	tpl.mutex.Lock()
+	defer tpl.mutex.Unlock()
+	delete(tpl.partials, name)
+}
+
 // RegisterPartialFile reads given file and registers its content as a partial with given name.
 func (tpl *Template) RegisterPartialFile(filePath string, name string) error {
 	b, err := ioutil.ReadFile(filePath)

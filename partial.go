@@ -70,6 +70,13 @@ func findPartial(name string) *partial {
 	return partials[name]
 }
 
+// RemovePartial removes a previously registered partial.
+func RemovePartial(name string) {
+	partialsMutex.Lock()
+	defer partialsMutex.Unlock()
+	delete(partials, name)
+}
+
 // template returns parsed partial template
 func (p *partial) template() (*Template, error) {
 	if p.tpl == nil {

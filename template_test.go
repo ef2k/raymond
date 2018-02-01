@@ -177,3 +177,16 @@ func TestTemplateRemoveHelper(t *testing.T) {
 		t.Error("Expected helper to not be registered")
 	}
 }
+
+func TestTemplateRemovePartial(t *testing.T) {
+	tpl := MustParse("")
+	tpl.RegisterPartial("foo", "<h1>foo</h1>")
+	if _, ok := tpl.partials["foo"]; !ok {
+		t.Error("Expected partial to be registered")
+	}
+
+	tpl.RemovePartial("foo")
+	if _, ok := tpl.helpers["foo"]; ok {
+		t.Error("Expected partial to not be registered")
+	}
+}
