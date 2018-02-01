@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/aymerick/raymond"
+  packages = [".","ast","lexer","parser"]
+  revision = "a2232af10b53ef1ae5a767f5178db3a6c1dab655"
+  version = "v2.0.1"
+
+[[projects]]
   branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -10,6 +16,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c39e9119cc91080f9178c39214d6ca06156205351dec2523319554ee3669537e"
+  inputs-digest = "ddc65247486900dbe4dbd869b80915ab3e4b0a66e1189664aa27b1a0c5a432d7"
   solver-name = "gps-cdcl"
   solver-version = 1
