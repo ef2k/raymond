@@ -260,14 +260,35 @@ func TestHelperCtx(t *testing.T) {
 	}
 }
 
-func TestRemoveHelper(t *testing.T) {
-	RegisterHelper("foo", func() string { return "" })
-	if _, ok := helpers["foo"]; !ok {
-		t.Error("Expected helper to be registered")
+func TestRegisterHelper(t *testing.T) {
+	boop := func(name string, options *Options) SafeString { return "" }
+	if err := RegisterHelper("boop", boop); err != nil {
+		t.Error("Expected helper to be registered without error")
 	}
 
-	RemoveHelper("foo")
-	if _, ok := helpers["foo"]; ok {
+	if err := RegisterHelper("boop", boop); err == nil {
+		t.Error("Expected error caused by registering a duplicate helper")
+	}
+}
+
+func TestRemoveHelper(t *testing.T) {
+	boop := func(name string, options *Options) SafeString { return "" }
+	RegisterHelper("boop", boop)
+	if _, ok := helpers["boop"]; !ok {
+		t.Error("Expected helper to be registered")
+	}
+	RemoveHelper("boop")
+	if _, ok := helpers["boop"]; ok {
 		t.Error("Expected helper to not be registered")
+	}
+}
+
+func TestRegisterHelpers(t *testing.T) {
+	boop := func(name string, options *Options) SafeString { return "" }
+	helpers := map[string]interface{}{
+		"boop": boop,
+	}
+	if err := RegisterHelpers(helpers); err != nil {
+		t.Error("Expected helpers to register without error")
 	}
 }

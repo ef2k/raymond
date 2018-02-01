@@ -104,25 +104,29 @@ func (tpl *Template) findHelper(name string) reflect.Value {
 }
 
 // RegisterHelper registers a helper for that template.
-func (tpl *Template) RegisterHelper(name string, helper interface{}) {
+func (tpl *Template) RegisterHelper(name string, helper interface{}) error {
 	tpl.mutex.Lock()
 	defer tpl.mutex.Unlock()
 
 	if tpl.helpers[name] != zero {
-		panic(fmt.Sprintf("Helper %s already registered", name))
+		return fmt.Errorf("Helper %s already registered", name)
 	}
 
 	val := reflect.ValueOf(helper)
 	ensureValidHelper(name, val)
 
 	tpl.helpers[name] = val
+	return nil
 }
 
 // RegisterHelpers registers several helpers for that template.
-func (tpl *Template) RegisterHelpers(helpers map[string]interface{}) {
+func (tpl *Template) RegisterHelpers(helpers map[string]interface{}) error {
 	for name, helper := range helpers {
-		tpl.RegisterHelper(name, helper)
+		if err := tpl.RegisterHelper(name, helper); err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 // RemoveHelper removes a previously registered helper from the template.
@@ -132,15 +136,16 @@ func (tpl *Template) RemoveHelper(name string) {
 	delete(tpl.helpers, name)
 }
 
-func (tpl *Template) addPartial(name string, source string, template *Template) {
+func (tpl *Template) addPartial(name string, source string, template *Template) error {
 	tpl.mutex.Lock()
 	defer tpl.mutex.Unlock()
 
 	if tpl.partials[name] != nil {
-		panic(fmt.Sprintf("Partial %s already registered", name))
+		return fmt.Errorf("Partial %s already registered", name)
 	}
 
 	tpl.partials[name] = newPartial(name, source, template)
+	return nil
 }
 
 func (tpl *Template) findPartial(name string) *partial {
@@ -151,8 +156,8 @@ func (tpl *Template) findPartial(name string) *partial {
 }
 
 // RegisterPartial registers a partial for that template.
-func (tpl *Template) RegisterPartial(name string, source string) {
-	tpl.addPartial(name, source, nil)
+func (tpl *Template) RegisterPartial(name string, source string) error {
+	return tpl.addPartial(name, source, nil)
 }
 
 // RegisterPartials registers several partials for that template.
@@ -198,8 +203,8 @@ func (tpl *Template) RegisterPartialFiles(filePaths ...string) error {
 }
 
 // RegisterPartialTemplate registers an already parsed partial for that template.
-func (tpl *Template) RegisterPartialTemplate(name string, template *Template) {
-	tpl.addPartial(name, "", template)
+func (tpl *Template) RegisterPartialTemplate(name string, template *Template) error {
+	return tpl.addPartial(name, "", template)
 }
 
 // Exec evaluates template with given context.
