@@ -1,6 +1,6 @@
 # raymond
 
-This is a fork of `aymerick/raymond` with non-breaking API changes.
+This is a fork of `aymerick/raymond`, a Golang implementation of Handlebars 3.0, with non-breaking API changes.
 
 ## What changed?
 
